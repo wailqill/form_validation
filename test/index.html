@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>wq.Form.Validation</title>
+  <script src="../lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+	<style type="text/css" media="screen">
+	body, html {
+	  margin: 0;
+	  padding: 0;
+	  background: #ccc;
+	}
+  #page {
+    font: 80%/1.4 Helvetica, Arial, sans-serif;
+    margin: 10px;
+  }
+  #test_frame {
+    border: 1px solid #000;
+    background: #fff;
+    width: 100%;
+    height: 500px;
+  }
+	</style>
+	<script type="text/javascript" charset="utf-8">
+  $(document).observe("dom:loaded", function() {
+    // setup hash handlers
+    $$("#test-links a").invoke("observe", "click", function() {
+      document.location = "#url=" + this.getAttribute("href", 2);
+    })
+    
+    // go to preselected test
+    var m = document.location.hash.match(/^#url=(.+)$/);
+    m && ($("test_frame").src = m[1]);
+  });
+	</script>
+</head>
+
+<body>
+  <div id="page">
+    <h1>Tests for wq.Form.Validation</h1>
+    <p>Run tests below:</p>
+    <ol id="test-links">
+      <li><a target="test_frame" href="main_class_tests.html">Main Class tests</a></li>
+      <li><a target="test_frame" href="elements_tests.html">Elements tests</a></li>
+      <li><a target="test_frame" href="validator_tests.html">Validator tests</a></li>
+    </ol>
+    <iframe src="#" id="test_frame" name="test_frame"></iframe>
+  </div>
+</body>
+</html>

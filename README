@@ -1,0 +1,7 @@
+== wq.Form.Validation ==
+
+This is a library for form validation in a very early stage, and is not yet ready for usage in a production environment.
+
+It aims for unobtrusiveness, and yet very reasonable defaults and minimal configuration for the elements to be validated.
+
+/Glenn

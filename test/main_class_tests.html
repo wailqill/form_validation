@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <script src="../lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../lib/unittest.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="../lib/test.css" type="text/css" media="screen" charset="utf-8">
+
+  <script src="../src/wq.form_validator.js" type="text/javascript" charset="utf-8"></script>
+	<title>Form.Validator: main class tests</title>
+	
+</head>
+
+<body>
+
+<h2>Main Class tests</h2>
+
+<!-- Log output -->
+<div id="testlog"></div>
+
+<script type="text/javascript" charset="utf-8">
+// <![CDATA[
+new Test.Unit.Runner({
+	setup: function() {
+		wq.Form.Validation.remove("my-form");
+	},
+  test_class_should_exist: function() {
+    this.assert(wq);
+    this.assert(wq.Form);
+    this.assert(wq.Form.Validation);
+  },
+  test_constructor_should_throw_execption_if_no_element_specified: function() {
+    this.assertRaise(null, function() { new wq.Form.Validation(); });
+  },
+  test_class_should_have_forElement_method: function() {
+    this.assertRespondsTo("forElement", wq.Form.Validation);
+  },
+  test_should_not_get_instance_with_faulty_element_argument: function() {
+    this.assertNull(wq.Form.Validation.forElement("i-do-not-exist"));
+  },
+  test_should_not_get_instance_if_none_created: function() {
+    this.assertNull(wq.Form.Validation.forElement("my-form"));
+  },
+  test_get_instance_from_forElement_method_with_string: function() {
+    new wq.Form.Validation("my-form");
+    var fv = wq.Form.Validation.forElement("my-form");
+    this.assertNotNull(fv);
+    this.assertIdentical($("my-form"), fv.form);
+  },
+  test_get_instance_from_forElement_method_with_dom_element: function() {
+    new wq.Form.Validation("my-form");
+    var fv = wq.Form.Validation.forElement(document.getElementById("my-form"));
+    this.assertNotNull(fv);
+    this.assertIdentical($("my-form"), fv.form);
+  },
+  test_get_instance_from_forElement_method_with_prototype_element: function() {
+    new wq.Form.Validation("my-form");
+    var fv = wq.Form.Validation.forElement($("my-form"));
+    this.assertNotNull(fv);
+    this.assertIdentical($("my-form"), fv.form);
+  },
+  test_should_remove_instance_with_class_method: function() {
+  	new wq.Form.Validation("my-form");
+    this.assert(wq.Form.Validation.remove);
+  	var fv = wq.Form.Validation.forElement("my-form");
+    this.assertNotNull(fv);
+    this.assert(wq.Form.Validation.remove("my-form"));
+  	fv = wq.Form.Validation.forElement("my-form");
+    this.assertNull(fv);
+  },
+  test_should_expose_an_elements_array: function() {
+    with_fv(function(fv) {
+      this.assert(fv.elements instanceof Array);
+    }.bind(this));
+  },
+  test_elements_collection_should_have_method_to_add_multiple_elements_by_selector_or_collection: function() {
+    with_fv(function(fv) {
+      this.assertInstanceOf(Function, fv.elements.add);
+      fv.elements.add("input[name^='person[name']");
+      this.assertEqual(2, fv.elements.length);
+      fv.elements.add($$("input[name^='person[email']"));
+      this.assertEqual(4, fv.elements.length);
+    }.bind(this));
+  },
+  test_should_fire_custom_events: function() {
+    var counter = 0;
+    $("my-form").observe("fv:create", function() { counter++; });
+    var fv = new wq.Form.Validation("my-form");
+    this.assertEqual(1, counter);
+    
+    $("my-form").observe("fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
+    fv.elements.add("input[name*=email]");
+    this.assertEqual(3, counter);
+  }
+  /*
+  test_: function() {
+    with_fv(function(fv) {
+      
+    }.bind(this));
+  }
+  */
+});
+
+function with_fv(f) {
+  var fv = new wq.Form.Validation("my-form");
+  f(fv);
+  wq.Form.Validation.remove("my-form");
+};
+
+// ]]>
+</script>
+
+<form action="index_submit" method="get" accept-charset="utf-8" id="my-form">
+  <p>
+    <label for="name">Name</label><input type="text" name="person[name]" value="" id="person_name">
+  </p>
+  <p>
+    <label for="name">Name 2</label><input type="text" name="person[name2]" value="" id="person_name2">
+  </p>
+  <p>
+    <label for="email">Email</label><input type="text" name="person[email]" value="" id="person_email">
+  </p>
+  <p>
+    <label for="email">Email 2</label><input type="text" name="person[email2]" value="" id="person_email2">
+  </p>
+  <p>
+    <label for="date">Date</label><input type="text" name="person[date]" value="" id="person_date">
+  </p>
+  
+  <p><input type="submit" value="Continue &rarr;"></p>
+</form>
+
+</body>
+</html>

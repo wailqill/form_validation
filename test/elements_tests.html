@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <script src="../lib/prototype.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../lib/unittest.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="../lib/test.css" type="text/css" media="screen" charset="utf-8">
+
+  <script src="../src/wq.form_validator.js" type="text/javascript" charset="utf-8"></script>
+	<title>Form.Validator: elements tests</title>
+	
+</head>
+
+<body>
+  <h2>Elements tests</h2>
+
+<!-- Log output -->
+<div id="testlog"></div>
+
+<script type="text/javascript" charset="utf-8">
+// <![CDATA[
+var fv = null;
+new Test.Unit.Runner({
+	setup: function() {
+		fv = new wq.Form.Validation("my-form");
+	},
+	teardown: function() {
+	  wq.Form.Validation.remove("my-form");
+	},
+  test_class_should_exist: function() {
+    this.assert(wq.Form.Validation.Element);
+  },
+  test_element_ctor_should_allow_for_string_and_obj_as_elements_and_expose_element: function() {
+    var elm = new wq.Form.Validation.Element($("person_name"));
+    this.assertEqual(elm.element, $("person_name"));
+    var elm = new wq.Form.Validation.Element("person_name");
+    this.assertEqual(elm.element, $("person_name"));
+  },
+  test_should_validate_required: function() {
+    var elm = new wq.Form.Validation.Element("person_name", {
+      required: true
+    });
+    $("person_name").value = "";
+    this.assert(!elm.validate());
+    $("person_name").value = "Glenn";
+    this.assert(elm.validate());
+  }
+});
+
+// ]]>
+</script>
+
+<form action="index_submit" method="get" accept-charset="utf-8" id="my-form">
+  <p>
+    <label for="name">Name</label><input type="text" name="person[name]" value="" id="person_name">
+  </p>
+  <p>
+    <label for="email">Email</label><input type="text" name="person[email]" value="" id="person_email">
+  </p>
+  <p>
+    <label for="date">Date</label><input type="text" name="person[date]" value="" id="person_date">
+  </p>
+  
+  <p><input type="submit" value="Continue &rarr;"></p>
+</form>
+
+</body>
+</html>
