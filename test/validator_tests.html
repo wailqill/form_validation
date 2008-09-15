@@ -31,24 +31,78 @@ new Test.Unit.Runner({
 	},
   test_class_should_exist: function() {
     this.assert(wq.Form.Validation.Validators);
-  }
+    this.assert(wq.Form.Validation.Validators.EmailFormats);
+  },
+  test_validate_required: function() {
+    var elm = new wq.Form.Validation.Element("person_field", { required: true });
+    
+    inputTextAssertFalse(this, elm, null);
+    inputTextAssertFalse(this, elm, "");
+    
+    inputTextAssertTrue(this, elm, "Glenn");
+    inputTextAssertTrue(this, elm, "false");
+  },
+  test_email_formats: function() {
+    this.assert(wq.Form.Validation.Validators.EmailFormats.RFC2822 instanceof RegExp);
+    this.assert(wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822 instanceof RegExp);
+  },
+  test_ensure_default_validation_is_RealisticRFC2822: function(){
+    var elm = new wq.Form.Validation.Element("person_field", { email: true });
+    this.assertIdentical(wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822, elm.options.email);
+  }  ,
+    test_validate_email_RFC2822: function() {
+      var elm = new wq.Form.Validation.Element("person_field", { email: wq.Form.Validation.Validators.EmailFormats.RFC2822 });
+
+      inputTextAssertFalse(this, elm, "");                        // Doh!
+      inputTextAssertFalse(this, elm, "Hello there");             // No @
+      inputTextAssertFalse(this, elm, "elm@elm");                 // No TLD
+      inputTextAssertFalse(this, elm, "elm@el m.com");            // Space not allowed in host
+
+      inputTextAssertTrue(this, elm, "test@example.haleluja");    // RFC doesn't restrict the TLD
+      inputTextAssertTrue(this, elm, "test@example.com");         // Standard
+      inputTextAssertTrue(this, elm, "test@100.100.100.100");     // With ip based host
+      inputTextAssertTrue(this, elm, '"test"@example.com');       // With double quotes
+      inputTextAssertTrue(this, elm, '"Hey\\ ho"@example.com');   // With space
+    },
+    test_validate_email_RealisticRFC2822: function() {
+      var elm = new wq.Form.Validation.Element("person_field", { email: wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822 });
+      
+      inputTextAssertFalse(this, elm, "");
+      inputTextAssertFalse(this, elm, "Hello there");
+      inputTextAssertFalse(this, elm, "elm@elm");
+      inputTextAssertFalse(this, elm, "elm@el m.com");
+      inputTextAssertFalse(this, elm, "test@example.haleluja");   // Bad TLD
+      inputTextAssertFalse(this, elm, '"test"@example.com');      // Double quotes
+      inputTextAssertFalse(this, elm, '"Hey\\ ho"@example.com');  // Space
+      inputTextAssertFalse(this, elm, "test@100.100.100.100");    // IP based host
+                                                                  
+      "aero,arpa,asia,biz,cat,com,coop,edu,gov,info,int,jobs,mil,mobi,museum,name,net,org,pro,tel,travel,xn--0zwm56d,xn--11b5bs3a9aj6g,xn--80akhbyknj4f,xn--9t4b11yi5a,xn--deba0ad,xn--g6w251d,xn--hgbk6aj7f53bba,xn--hlcj6aya9esc7a,xn--jxalpdlp,xn--kgbechtv,xn--zckzah".split(",").each(function(tld) {
+        inputTextAssertTrue(this, elm, "test@example." + tld);    // With every defined TLD
+      }.bind(this));
+      
+      var range = $R("a", "z");
+      range.each(function(first) {
+        range.each(function(last) {
+          inputTextAssertTrue(this, elm, "test@example." + first + last);  // Every possible 2-letter combination of a-z
+        }.bind(this));
+      }.bind(this));
+    }
 });
+
+function inputTextAssertTrue(o, elm, value) { return inputTextAssertion(o, elm, value, true); }
+function inputTextAssertFalse(o, elm, value) { return inputTextAssertion(o, elm, value, false); }
+function inputTextAssertion(o, elm, value, expected) {
+  elm.element.value = value;
+  o.assertIdentical(expected, elm.validate());
+}
 
 // ]]>
 </script>
 
-<form action="index_submit" method="get" accept-charset="utf-8" id="my-form">
+<form action="#" method="get" accept-charset="utf-8" id="my-form">
   <p>
-    <label for="name">Name</label><input type="text" name="person[name]" value="" id="person_name">
+    <label for="name">Field</label><input type="text" name="person[field]" value="" id="person_field">
   </p>
-  <p>
-    <label for="email">Email</label><input type="text" name="person[email]" value="" id="person_email">
-  </p>
-  <p>
-    <label for="date">Date</label><input type="text" name="person[date]" value="" id="person_date">
-  </p>
-  
-  <p><input type="submit" value="Continue &rarr;"></p>
 </form>
 
 </body>
