@@ -37,15 +37,6 @@ new Test.Unit.Runner({
     this.assertEqual(elm.element, $("person_name"));
     var elm = new wq.Form.Validation.Element("person_name");
     this.assertEqual(elm.element, $("person_name"));
-  },
-  test_should_validate_required: function() {
-    var elm = new wq.Form.Validation.Element("person_name", {
-      required: true
-    });
-    $("person_name").value = "";
-    this.assert(!elm.validate());
-    $("person_name").value = "Glenn";
-    this.assert(elm.validate());
   }
 });
 
