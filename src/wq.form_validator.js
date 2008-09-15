@@ -60,7 +60,7 @@
   
   wq.Form.Validation.Validators = {
     required: function(input, option) {
-      return input.length > 0;
+      return input && input != "null" && input.length > 0;
     },
     email: function(input, option) {
       return option.test(input);
