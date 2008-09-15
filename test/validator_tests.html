@@ -36,6 +36,38 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "Glenn");
     inputTextAssertTrue(this, elm, "false");
   },
+  test_validate_minimum_length: function() {
+    var elm = new wq.Form.Validation.Element("person_field", { min_length: 5 });
+    
+    inputTextAssertFalse(this, elm, null);
+    inputTextAssertFalse(this, elm, "");
+    inputTextAssertFalse(this, elm, "Hell");
+    
+    inputTextAssertTrue(this, elm, "Hello");
+    inputTextAssertTrue(this, elm, $R(1, 10000).toArray().join(""));
+  },
+  test_validate_maximum_length: function() {
+    var elm = new wq.Form.Validation.Element("person_field", { max_length: 10 });
+    
+    inputTextAssertTrue(this, elm, null);
+    inputTextAssertTrue(this, elm, "");
+    inputTextAssertTrue(this, elm, "Hell");
+    
+    inputTextAssertFalse(this, elm, "Hello there");
+    inputTextAssertFalse(this, elm, $R(1, 10000).toArray().join(""));
+  },
+  test_validate_length_with_range: function() {
+    var elm = new wq.Form.Validation.Element("person_field", { length: $R(5, 10) });
+    
+    inputTextAssertFalse(this, elm, null);
+    inputTextAssertFalse(this, elm, "");
+    inputTextAssertFalse(this, elm, "1234");
+    inputTextAssertFalse(this, elm, "12345678901");
+    inputTextAssertFalse(this, elm, $R(1, 10000).toArray().join(""));
+    
+    inputTextAssertTrue(this, elm, "12345");
+    inputTextAssertTrue(this, elm, "1234567890");
+  },
   test_validate_regexp: function() {
     var elm = new wq.Form.Validation.Element("person_field", { regexp: /^hello/ });
     
