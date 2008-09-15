@@ -22,6 +22,32 @@
     background: #fff;
     width: 100%;
     height: 500px;
+    margin-top: 1em;
+  }
+  #test-links {
+    counter-reset: chapter;
+  }
+  html>body #test-links, html>body #test-links ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  #test-links li:before {
+    counter-increment: chapter;
+    content: counter(chapter) ". ";
+  }
+  #test-links li {
+    padding: 0 0 0 20px;
+  }
+  #test-links li ol {
+    counter-reset: section;
+  }
+  #test-links li li:before {
+    counter-increment: section;
+    content: counter(chapter) "." counter(section) ". ";
+  }
+  #test-links li li {
+    font-weight: normal;
   }
 	</style>
 	<script type="text/javascript" charset="utf-8">
@@ -45,7 +71,9 @@
     <ol id="test-links">
       <li><a target="test_frame" href="main_class_tests.html">Main Class tests</a></li>
       <li><a target="test_frame" href="elements_tests.html">Elements tests</a></li>
-      <li><a target="test_frame" href="validator_tests.html">Validator tests</a></li>
+      <li><a target="test_frame" href="validator_tests.html">Validator tests</a><ol>
+        <li><a target="test_frame" href="validator_email_tests.html">Validator email tests only</a></li>
+      </ol></li>
     </ol>
     <iframe src="#" id="test_frame" name="test_frame"></iframe>
   </div>
