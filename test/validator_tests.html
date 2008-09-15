@@ -22,14 +22,7 @@
 
 <script type="text/javascript" charset="utf-8">
 // <![CDATA[
-var fv = null;
 new Test.Unit.Runner({
-	setup: function() {
-		fv = new wq.Form.Validation("my-form");
-	},
-	teardown: function() {
-	  wq.Form.Validation.remove("my-form");
-	},
   test_class_should_exist: function() {
     this.assert(wq.Form.Validation.Validators);
     this.assert(wq.Form.Validation.Validators.EmailFormats);
