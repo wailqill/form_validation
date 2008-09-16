@@ -14,6 +14,9 @@
       wq.Form.Validation.prototype.elements.add = addElements.curry(this);
       this.form.fire("fv:create");
     },
+    validate: function() {
+      this.elements.invoke("validate");
+    },
     elements: $A()
   });
   function addElements(fv) {

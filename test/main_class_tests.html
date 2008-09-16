@@ -93,6 +93,30 @@ new Test.Unit.Runner({
     $("my-form").observe("fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
     fv.elements.add("input[name*=email]");
     this.assertEqual(3, counter);
+  },
+  test_should_have_validate_method: function() {
+    with_fv(function(fv) {
+      this.assertRespondsTo("validate", fv);
+    }.bind(this));
+  },
+  test_should_trigger_validate_on_all_elements: function() {
+    var hash = $H();
+    var f = wq.Form.Validation.Element.prototype.validate;
+    wq.Form.Validation.Element.prototype.validate = function() {
+      hash.set(this.element.id, true);
+    };
+    
+    with_fv(function(fv) {
+      fv.elements.add("#person_name", { required: true });
+      fv.elements.add("#person_email", { email: true });
+      fv.validate();
+      this.assertEqual(true, hash.get("person_name"));
+      this.assertEqual(true, hash.get("person_email"));
+      
+      this.assertEqual(null, hash.get("person_date"));
+    }.bind(this));
+    
+    wq.Form.Validation.Element.prototype.validate = f;
   }
   /*
   test_: function() {
