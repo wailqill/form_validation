@@ -84,15 +84,18 @@ new Test.Unit.Runner({
       this.assertEqual(4, fv.elements.length);
     }.bind(this));
   },
-  test_should_fire_custom_events: function() {
+  test_should_fire_custom_event_create: function() {
     var counter = 0;
     $("my-form").observe("fv:create", function() { counter++; });
     var fv = new wq.Form.Validation("my-form");
     this.assertEqual(1, counter);
-    
+  },
+  test_should_fire_custom_event_element_added: function() {
+    var counter = 0;
+    var fv = new wq.Form.Validation("my-form");
     $("my-form").observe("fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
     fv.elements.add("input[name*=email]");
-    this.assertEqual(3, counter);
+    this.assertEqual(2, counter);
   },
   test_should_have_validate_method: function() {
     with_fv(function(fv) {
