@@ -28,7 +28,7 @@ new Test.Unit.Runner({
     this.assert(wq.Form.Validation.Validators.EmailFormats);
   },
   test_validate_required: function() {
-    var elm = new wq.Form.Validation.Element("person_field", { required: true });
+    var elm = new wq.Form.Validation.Field("person_field", { required: true });
     
     inputTextAssertFalse(this, elm, null);
     inputTextAssertFalse(this, elm, "");
@@ -37,7 +37,7 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "false");
   },
   test_validate_minimum_length: function() {
-    var elm = new wq.Form.Validation.Element("person_field", { min_length: 5 });
+    var elm = new wq.Form.Validation.Field("person_field", { min_length: 5 });
     
     inputTextAssertFalse(this, elm, null);
     inputTextAssertFalse(this, elm, "");
@@ -47,7 +47,7 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, $R(1, 10000).toArray().join(""));
   },
   test_validate_maximum_length: function() {
-    var elm = new wq.Form.Validation.Element("person_field", { max_length: 10 });
+    var elm = new wq.Form.Validation.Field("person_field", { max_length: 10 });
     
     inputTextAssertTrue(this, elm, null);
     inputTextAssertTrue(this, elm, "");
@@ -57,7 +57,7 @@ new Test.Unit.Runner({
     inputTextAssertFalse(this, elm, $R(1, 10000).toArray().join(""));
   },
   test_validate_length_with_range: function() {
-    var elm = new wq.Form.Validation.Element("person_field", { length: $R(5, 10) });
+    var elm = new wq.Form.Validation.Field("person_field", { length: $R(5, 10) });
     
     inputTextAssertFalse(this, elm, null);
     inputTextAssertFalse(this, elm, "");
@@ -69,7 +69,7 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "1234567890");
   },
   test_validate_regexp: function() {
-    var elm = new wq.Form.Validation.Element("person_field", { regexp: /^hello/ });
+    var elm = new wq.Form.Validation.Field("person_field", { regexp: /^hello/ });
     
     inputTextAssertFalse(this, elm, null);
     inputTextAssertFalse(this, elm, "");
@@ -81,7 +81,7 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "hello");
   },
   test_combinating_validations: function() {
-  	var elm = new wq.Form.Validation.Element("person_field", { regexp: /^hello/, min_length: 10, email: true });
+  	var elm = new wq.Form.Validation.Field("person_field", { regexp: /^hello/, min_length: 10, email: true });
     
     inputTextAssertFalse(this, elm, "hell@kitty.com");
     inputTextAssertFalse(this, elm, "hello@a.c");

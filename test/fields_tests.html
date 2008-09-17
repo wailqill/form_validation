@@ -9,12 +9,12 @@
   <link rel="stylesheet" href="../lib/test.css" type="text/css" media="screen" charset="utf-8">
 
   <script src="../src/wq.form_validator.js" type="text/javascript" charset="utf-8"></script>
-	<title>Form.Validator: elements tests</title>
+	<title>Form.Validator: fields tests</title>
 	
 </head>
 
 <body>
-  <h2>Elements tests</h2>
+  <h2>Fields tests</h2>
 
 <!-- Log output -->
 <div id="testlog"></div>
@@ -30,24 +30,24 @@ new Test.Unit.Runner({
 	  wq.Form.Validation.remove("my-form");
 	},
   test_class_should_exist: function() {
-    this.assert(wq.Form.Validation.Element);
+    this.assert(wq.Form.Validation.Field);
   },
   test_should_have_static_remove_method: function() {
-    this.assertRespondsTo("remove", wq.Form.Validation.Element);
+    this.assertRespondsTo("remove", wq.Form.Validation.Field);
   },
   test_element_ctor_should_allow_for_string_and_obj_as_elements_and_expose_element: function() {
-    var elm = new wq.Form.Validation.Element($("person_name"));
-    this.assertEqual(elm.element, $("person_name"));
-    var elm = new wq.Form.Validation.Element("person_name");
-    this.assertEqual(elm.element, $("person_name"));
+    var field = new wq.Form.Validation.Field($("person_name"));
+    this.assertEqual(field.element, $("person_name"));
+    var field = new wq.Form.Validation.Field("person_name");
+    this.assertEqual(field.element, $("person_name"));
   },
   test_should_have_validate_method_returning_boolean: function() {
     var elm = $("person_name");
-    var fve = new wq.Form.Validation.Element(elm, { required: true });
-    this.assertRespondsTo("validate", fve);
-    this.assertEqual(false, fve.validate());
+    var field = new wq.Form.Validation.Field(elm, { required: true });
+    this.assertRespondsTo("validate", field);
+    this.assertEqual(false, field.validate());
     elm.value = "Hello world";
-    this.assertEqual(true, fve.validate());
+    this.assertEqual(true, field.validate());
   }
 });
 

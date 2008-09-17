@@ -11,14 +11,14 @@
       this.form = $(form);
       form_validations.set(this.form, this);
       
-      this.elements = $A();
-      this.elements.add = addElements.curry(this);
+      this.fields = $A();
+      this.fields.add = addElements.curry(this);
       this._submitHandler = this.validate.bindAsEventListener(this);
       this.form.observe("submit", this._submitHandler);
       this.form.fire("fv:create");
     },
     validate: function(e) {
-      var result = this.elements.invoke("validate").all();
+      var result = this.fields.invoke("validate").all();
       if (!result && e instanceof Event) e.stop();
       return result;
     }
@@ -26,8 +26,8 @@
   function addElements(fv, elms, options) {
     if (typeof(elms) == "string") elms = $$(elms);
     elms.each(function(elm) {
-      this.push(new wq.Form.Validation.Element(elm, options));
-      elm.fire("fv:element:added", { element: elm });
+      this.push(new wq.Form.Validation.Field(elm, options));
+      elm.fire("fv:field:added", { element: elm });
     }.bind(this));
   };
   
@@ -44,8 +44,8 @@
     	if (!fv) return true;
     	
     	// Trigger remove for all elements
-    	fv.elements.each(function(elm) {
-    	  wq.Form.Validation.Element.remove(elm);
+    	fv.fields.each(function(elm) {
+    	  wq.Form.Validation.Field.remove(elm);
     	});
     	
     	// Remove event handler for submit
@@ -60,7 +60,7 @@
     }
   });
   
-  wq.Form.Validation.Element = Class.create({
+  wq.Form.Validation.Field = Class.create({
     initialize: function(elm, options) {
       var elm = $(elm);
       this.element = elm;
@@ -72,14 +72,14 @@
       var valid = $H(this.options).all(function(opt) {
         return !v[opt.key] || v[opt.key](this.element.getValue(), opt.value);
       }.bind(this));
-      this.element.fire("fv:element:validated", {
+      this.element.fire("fv:field:validated", {
         element: this.element,
         valid: valid
       });
       return valid;
     }
   });
-  Object.extend(wq.Form.Validation.Element, {
+  Object.extend(wq.Form.Validation.Field, {
     remove: function() {
       // TODO: MAke something nice here.
     }

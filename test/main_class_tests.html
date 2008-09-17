@@ -72,30 +72,30 @@ new Test.Unit.Runner({
   },
   test_should_not_remember_previous_elements_when_recreating_instance: function() {
   	var fv = new wq.Form.Validation("my-form");
-  	fv.elements.add("#person_name");
-  	this.assertEqual(1, fv.elements.length);
+  	fv.fields.add("#person_name");
+  	this.assertEqual(1, fv.fields.length);
     wq.Form.Validation.remove("my-form");
 
   	var fv = new wq.Form.Validation("my-form");
-  	this.assertEqual(0, fv.elements.length);
-  	fv.elements.add("#person_email");
-  	this.assertEqual(1, fv.elements.length);
+  	this.assertEqual(0, fv.fields.length);
+  	fv.fields.add("#person_email");
+  	this.assertEqual(1, fv.fields.length);
   },
-  test_should_expose_an_elements_array: function() {
+  test_should_expose_an_fields_array: function() {
     with_fv(function(fv) {
-      this.assert(fv.elements instanceof Array);
+      this.assert(fv.fields instanceof Array);
     }.bind(this));
   },
   test_elements_collection_should_have_method_to_add_multiple_elements_by_selector_or_collection: function() {
     with_fv(function(fv) {
-      this.assertInstanceOf(Function, fv.elements.add);
-      fv.elements.add("input[name^='person[name']");
-      this.assertEqual(2, fv.elements.length);
-      fv.elements.add($$("input[name^='person[email']"), { hello: "kitty" });
-      this.assertEqual(4, fv.elements.length);
+      this.assertInstanceOf(Function, fv.fields.add);
+      fv.fields.add("input[name^='person[name']");
+      this.assertEqual(2, fv.fields.length);
+      fv.fields.add($$("input[name^='person[email']"), { hello: "kitty" });
+      this.assertEqual(4, fv.fields.length);
       
       // Check so that options are present.
-      this.assertEqual("kitty", fv.elements.last().options.hello);
+      this.assertEqual("kitty", fv.fields.last().options.hello);
     }.bind(this));
   },
   test_should_fire_custom_event_create: function() {
@@ -105,25 +105,25 @@ new Test.Unit.Runner({
     this.assertEqual(1, counter);
     wq.Form.Validation.remove("my-form");
   },
-  test_should_fire_custom_event_element_added_on_element_not_form: function() {
+  test_should_fire_custom_event_field_added_on_element_not_form: function() {
     with_fv(function(fv) {
       var counter = 0;
       var elms = $$("input[name*=email]");
       // observe form to ensure bubbling works.
-      $("my-form").observe("fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
+      $("my-form").observe("fv:field:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
       // observe elements themselves to ensure events are trigger on them explicitly.
-      elms.invoke("observe", "fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
+      elms.invoke("observe", "fv:field:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
       // Add.
-      fv.elements.add(elms);
+      fv.fields.add(elms);
       // Verify.
       this.assertEqual(4, counter);
     }.bind(this));
   },
-  test_should_fire_custom_event_element_validated: function() {
+  test_should_fire_custom_event_field_validated: function() {
     with_fv(function(fv) {
       var counter = 0;
-      fv.elements.add("input[name*=email]");
-      $("my-form").observe("fv:element:validated", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
+      fv.fields.add("input[name*=email]");
+      $("my-form").observe("fv:field:validated", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
       fv.validate();
       this.assertEqual(2, counter);
     }.bind(this));
@@ -132,7 +132,7 @@ new Test.Unit.Runner({
     with_fv(function(fv) {
       this.assertRespondsTo("validate", fv);
       
-      fv.elements.add("#person_name", { required: true });
+      fv.fields.add("#person_name", { required: true });
       
       $("person_name").value = "";
       this.assertIdentical(false, fv.validate());
@@ -144,14 +144,14 @@ new Test.Unit.Runner({
   },
   test_should_trigger_validate_on_all_elements: function() {
     var hash = $H();
-    var f = wq.Form.Validation.Element.prototype.validate;
-    wq.Form.Validation.Element.prototype.validate = function() {
+    var f = wq.Form.Validation.Field.prototype.validate;
+    wq.Form.Validation.Field.prototype.validate = function() {
       hash.set(this.element.id, true);
     };
     
     with_fv(function(fv) {
-      fv.elements.add("#person_name", { required: true });
-      fv.elements.add("#person_email", { email: true });
+      fv.fields.add("#person_name", { required: true });
+      fv.fields.add("#person_email", { email: true });
       fv.validate();
       this.assertEqual(true, hash.get("person_name"));
       this.assertEqual(true, hash.get("person_email"));
@@ -159,18 +159,18 @@ new Test.Unit.Runner({
       this.assertEqual(null, hash.get("person_date"));
     }.bind(this));
     
-    wq.Form.Validation.Element.prototype.validate = f;
+    wq.Form.Validation.Field.prototype.validate = f;
   },
   test_should_trigger_remove_on_all_elements: function() {
     var hash = $H();
-    var f = wq.Form.Validation.Element.remove;
-    wq.Form.Validation.Element.remove = function(fve) {
+    var f = wq.Form.Validation.Field.remove;
+    wq.Form.Validation.Field.remove = function(fve) {
       hash.set(fve.element.id, true);
     };
     
     with_fv(function(fv) {
-      fv.elements.add("#person_name", { required: true });
-      fv.elements.add("#person_email", { email: true });
+      fv.fields.add("#person_name", { required: true });
+      fv.fields.add("#person_email", { email: true });
       var f = fv.form;
       wq.Form.Validation.remove(f);
       this.assertEqual(true, hash.get("person_name"));
@@ -179,17 +179,17 @@ new Test.Unit.Runner({
       this.assertEqual(null, hash.get("person_date"));
     }.bind(this));
     
-    wq.Form.Validation.Element.remove = f;
+    wq.Form.Validation.Field.remove = f;
   },
   test_should_attach_validation_by_default: function() {
     with_fv(function(fv) {
-      fv.elements.add("#person_email", { required: true });
+      fv.fields.add("#person_email", { required: true });
       
       var counter = 0;
       var fCounter = function() { counter++; };
-      fv.form.observe("fv:element:validated", fCounter);
+      fv.form.observe("fv:field:validated", fCounter);
       $("submit_button").click();
-      fv.form.stopObserving("fv:element:validated", fCounter);
+      fv.form.stopObserving("fv:field:validated", fCounter);
       
       this.assertEqual(1, counter);
     }.bind(this));

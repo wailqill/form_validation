@@ -28,11 +28,11 @@ new Test.Unit.Runner({
     this.assert(wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822 instanceof RegExp);
   },
   test_ensure_default_email_validation_is_RealisticRFC2822: function(){
-    var elm = new wq.Form.Validation.Element("person_field", { email: true });
+    var elm = new wq.Form.Validation.Field("person_field", { email: true });
     this.assertIdentical(wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822, elm.options.email);
   },
   test_validate_email_RFC2822: function() {
-    var elm = new wq.Form.Validation.Element("person_field", { email: wq.Form.Validation.Validators.EmailFormats.RFC2822 });
+    var elm = new wq.Form.Validation.Field("person_field", { email: wq.Form.Validation.Validators.EmailFormats.RFC2822 });
 
     inputTextAssertFalse(this, elm, "");                        // Doh!
     inputTextAssertFalse(this, elm, "Hello there");             // No @
@@ -46,7 +46,7 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, '"Hey\\ ho"@example.com');   // With space
   },
   test_validate_email_RealisticRFC2822: function() {
-    var elm = new wq.Form.Validation.Element("person_field", { email: wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822 });
+    var elm = new wq.Form.Validation.Field("person_field", { email: wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822 });
     
     inputTextAssertFalse(this, elm, "");
     inputTextAssertFalse(this, elm, "Hello there");
