@@ -102,12 +102,18 @@ new Test.Unit.Runner({
     this.assertEqual(1, counter);
     wq.Form.Validation.remove("my-form");
   },
-  test_should_fire_custom_event_element_added: function() {
+  test_should_fire_custom_event_element_added_on_element_not_form: function() {
     with_fv(function(fv) {
       var counter = 0;
+      var elms = $$("input[name*=email]");
+      // observe form to ensure bubbling works.
       $("my-form").observe("fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
-      fv.elements.add("input[name*=email]");
-      this.assertEqual(2, counter);
+      // observe elements themselves to ensure events are trigger on them explicitly.
+      elms.invoke("observe", "fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
+      // Add.
+      fv.elements.add(elms);
+      // Verify.
+      this.assertEqual(4, counter);
     }.bind(this));
   },
   test_should_fire_custom_event_element_validated: function() {

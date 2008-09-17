@@ -24,7 +24,7 @@
     if (typeof(elms) == "string") elms = $$(elms);
     elms.each(function(elm) {
       this.push(new wq.Form.Validation.Element(elm));
-      fv.form.fire("fv:element:added", { element: elm });
+      elm.fire("fv:element:added", { element: elm });
     }.bind(this));
   };
   
