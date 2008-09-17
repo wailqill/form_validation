@@ -16,7 +16,7 @@
       this.form.fire("fv:create");
     },
     validate: function() {
-      this.elements.invoke("validate");
+      return this.elements.invoke("validate").all();
     }
   });
   function addElements(fv, elms, options) {
