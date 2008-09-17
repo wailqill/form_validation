@@ -64,6 +64,7 @@
     initialize: function(elm, options) {
       var elm = $(elm);
       this.element = elm;
+      this.errorElement = new Element("span", { "class": "fv_error" });
       this.options = arguments[1] || {};
       if (this.options.email === true) this.options.email = wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822;
     },
@@ -72,7 +73,7 @@
       var valid = $H(this.options).all(function(opt) {
         return !v[opt.key] || v[opt.key](this.element.getValue(), opt.value);
       }.bind(this));
-      !valid && this.showError();
+      valid ? this.hideError() : this.showError();
       this.element.fire("fv:element:validated", {
         element: this.element,
         valid: valid
@@ -80,8 +81,11 @@
       return valid;
     },
     showError: function() {
-      var err = new Element("span", { "class": "fv_error" }).update("Error");
-      this.element.insert({ after: err });
+      this.errorElement.update("Error");
+      this.element.insert({ after: this.errorElement });
+    },
+    hideError: function() {
+      this.errorElement.parentNode && this.errorElement.remove(); // Check to see if in DOM
     }
   });
   Object.extend(wq.Form.Validation.Element, {

@@ -48,13 +48,15 @@ new Test.Unit.Runner({
     this.assertEqual(true, fve.validate());
     wq.Form.Validation.Element.remove(fve); // teardown
   },
-  test_add_error_message_container: function() {
+  test_add_error_message_container_and_only_once: function() {
     var elm = $("person_name");
     elm.value = "";
     var fve = new wq.Form.Validation.Element(elm, { required: true });
-    this.assertNull(elm.next("span"));
+    this.assertNull(elm.next("span.fv_error"));
     fve.validate();
     this.assertNotNull(elm.next("span.fv_error"));
+    fve.validate();
+    this.assertNull(elm.next("span.fv_error").next("span.fv_error"));
     wq.Form.Validation.Element.remove(fve); // teardown
   },
   test_remove_error_message_container: function() {
