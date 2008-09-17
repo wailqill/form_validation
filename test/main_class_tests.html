@@ -160,6 +160,19 @@ new Test.Unit.Runner({
     }.bind(this));
     
     wq.Form.Validation.Element.prototype.validate = f;
+  },
+  test_should_attach_validation_by_default: function() {
+    with_fv(function(fv) {
+      fv.elements.add("#person_email", { required: true });
+      
+      var counter = 0;
+      var fCounter = function() { counter++; };
+      fv.form.observe("fv:element:validated", fCounter);
+      $("submit_button").click();
+      fv.form.stopObserving("fv:element:validated", fCounter);
+      
+      this.assertEqual(1, counter);
+    }.bind(this));
   }
   /*
   test_: function() {
@@ -179,7 +192,7 @@ function with_fv(f) {
 // ]]>
 </script>
 
-<form action="index_submit" method="get" accept-charset="utf-8" id="my-form">
+<form action="main_class_tests.html" method="get" accept-charset="utf-8" id="my-form">
   <p>
     <label for="name">Name</label><input type="text" name="person[name]" value="" id="person_name">
   </p>
@@ -196,7 +209,7 @@ function with_fv(f) {
     <label for="date">Date</label><input type="text" name="person[date]" value="" id="person_date">
   </p>
   
-  <p><input type="submit" value="Continue &rarr;"></p>
+  <p><input type="submit" value="Continue &rarr;" id="submit_button"></p>
 </form>
 
 </body>

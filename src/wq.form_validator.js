@@ -13,10 +13,15 @@
       
       this.elements = $A();
       this.elements.add = addElements.curry(this);
+      this._submitHandler = this.validate.bindAsEventListener(this);
+      this.form.observe("submit", this._submitHandler);
       this.form.fire("fv:create");
     },
-    validate: function() {
-      return this.elements.invoke("validate").all();
+    validate: function(e) {
+      document.title = Math.random();
+      var result = this.elements.invoke("validate").all();
+      if (!result && e instanceof Event) e.stop();
+      return result;
     }
   });
   function addElements(fv, elms, options) {
@@ -39,6 +44,7 @@
     	var fv = this.forElement(element);
     	if (!fv) return true;
     	var form = fv.form;
+    	form.stopObserving("submit", fv._submitHandler);
       delete fv;
       form_validations.unset(form);
       return true;
