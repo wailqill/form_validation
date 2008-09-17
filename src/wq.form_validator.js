@@ -64,14 +64,18 @@
     initialize: function(elm, options) {
       var elm = $(elm);
       this.element = elm;
+      this.errors = $H();
       this.errorElement = new Element("span", { "class": "fv_error" });
       this.options = arguments[1] || {};
       if (this.options.email === true) this.options.email = wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822;
     },
     validate: function() {
       var v = wq.Form.Validation.Validators;
+      this.errors = $H();
       var valid = $H(this.options).all(function(opt) {
-        return !v[opt.key] || v[opt.key](this.element.getValue(), opt.value);
+        var ok = !v[opt.key] || v[opt.key](this.element.getValue(), opt.value);
+        !ok && this.errors.set(opt.key, "Error");
+        return ok;
       }.bind(this));
       valid ? this.hideError() : this.showError();
       this.element.fire("fv:element:validated", {
