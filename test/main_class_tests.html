@@ -23,8 +23,8 @@
 <script type="text/javascript" charset="utf-8">
 // <![CDATA[
 new Test.Unit.Runner({
-	setup: function() {
-		wq.Form.Validation.remove("my-form");
+	teardown: function() {
+	  wq.Form.Validation.remove("my-form");
 	},
   test_class_should_exist: function() {
     this.assert(wq);
