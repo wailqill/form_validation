@@ -11,13 +11,13 @@
       this.form = $(form);
       form_validations.set(this.form, this);
       
-      wq.Form.Validation.prototype.elements.add = addElements.curry(this);
+      this.elements = $A();
+      this.elements.add = addElements.curry(this);
       this.form.fire("fv:create");
     },
     validate: function() {
       this.elements.invoke("validate");
-    },
-    elements: $A()
+    }
   });
   function addElements(fv) {
     var elms = arguments[1];
@@ -40,7 +40,7 @@
     	var fv = this.forElement(element);
     	if (!fv) return true;
     	var form = fv.form;
-      fv = null;
+      delete fv;
       form_validations.unset(form);
       return true;
     }

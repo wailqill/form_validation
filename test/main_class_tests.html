@@ -70,6 +70,17 @@ new Test.Unit.Runner({
   	fv = wq.Form.Validation.forElement("my-form");
     this.assertNull(fv);
   },
+  test_should_not_remember_previous_elements_when_recreating_instance: function() {
+  	var fv = new wq.Form.Validation("my-form");
+  	fv.elements.add("#person_name");
+  	this.assertEqual(1, fv.elements.length);
+    wq.Form.Validation.remove("my-form");
+
+  	var fv = new wq.Form.Validation("my-form");
+  	this.assertEqual(0, fv.elements.length);
+  	fv.elements.add("#person_email");
+  	this.assertEqual(1, fv.elements.length);
+  },
   test_should_expose_an_elements_array: function() {
     with_fv(function(fv) {
       this.assert(fv.elements instanceof Array);
