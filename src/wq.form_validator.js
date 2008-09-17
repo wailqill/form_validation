@@ -19,11 +19,10 @@
       this.elements.invoke("validate");
     }
   });
-  function addElements(fv) {
-    var elms = arguments[1];
+  function addElements(fv, elms, options) {
     if (typeof(elms) == "string") elms = $$(elms);
     elms.each(function(elm) {
-      this.push(new wq.Form.Validation.Element(elm));
+      this.push(new wq.Form.Validation.Element(elm, options));
       elm.fire("fv:element:added", { element: elm });
     }.bind(this));
   };
