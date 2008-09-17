@@ -90,10 +90,10 @@
       return input && input != "null" && input.length > 0;
     },
     email: function(input, option) {
-      return option.test(input);
+      return !input || option.test(input);
     },
     regexp: function(input, option) {
-      return option.test(input);
+      return !input || option.test(input);
     },
     length: function(input, range) {
       return range.include(input.length);

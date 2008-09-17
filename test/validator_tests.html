@@ -71,12 +71,12 @@ new Test.Unit.Runner({
   test_validate_regexp: function() {
     var elm = new wq.Form.Validation.Field("person_field", { regexp: /^hello/ });
     
-    inputTextAssertFalse(this, elm, null);
-    inputTextAssertFalse(this, elm, "");
     inputTextAssertFalse(this, elm, "Hello");
     inputTextAssertFalse(this, elm, "oh hello");
     inputTextAssertFalse(this, elm, "hell");
     
+    inputTextAssertTrue(this, elm, null);
+    inputTextAssertTrue(this, elm, "");
     inputTextAssertTrue(this, elm, "hello world!");
     inputTextAssertTrue(this, elm, "hello");
   },
@@ -87,6 +87,14 @@ new Test.Unit.Runner({
     inputTextAssertFalse(this, elm, "hello@a.c");
     
     inputTextAssertTrue(this, elm, "hello@kitty.com");
+  },
+  test_combining_regexp_with_required_demands_input: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { regexp: /^[abc]+$/, required: true });
+    inputTextAssertFalse(this, elm, "");
+    inputTextAssertTrue(this, elm, "abcacba");
+    
+    var elm = new wq.Form.Validation.Field("person_field", { regexp: /^[abc]$/ });
+    inputTextAssertTrue(this, elm, "");
   }
 });
 

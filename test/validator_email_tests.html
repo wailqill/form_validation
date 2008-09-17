@@ -34,11 +34,11 @@ new Test.Unit.Runner({
   test_validate_email_RFC2822: function() {
     var elm = new wq.Form.Validation.Field("person_field", { email: wq.Form.Validation.Validators.EmailFormats.RFC2822 });
 
-    inputTextAssertFalse(this, elm, "");                        // Doh!
     inputTextAssertFalse(this, elm, "Hello there");             // No @
     inputTextAssertFalse(this, elm, "elm@elm");                 // No TLD
     inputTextAssertFalse(this, elm, "elm@el m.com");            // Space not allowed in host
 
+    inputTextAssertTrue(this, elm, "");                         // Allow unless required is set to true
     inputTextAssertTrue(this, elm, "test@example.haleluja");    // RFC doesn't restrict the TLD
     inputTextAssertTrue(this, elm, "test@example.com");         // Standard
     inputTextAssertTrue(this, elm, "test@100.100.100.100");     // With ip based host
@@ -48,7 +48,6 @@ new Test.Unit.Runner({
   test_validate_email_RealisticRFC2822: function() {
     var elm = new wq.Form.Validation.Field("person_field", { email: wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822 });
     
-    inputTextAssertFalse(this, elm, "");
     inputTextAssertFalse(this, elm, "Hello there");
     inputTextAssertFalse(this, elm, "elm@elm");
     inputTextAssertFalse(this, elm, "elm@el m.com");
