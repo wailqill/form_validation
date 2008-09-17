@@ -72,16 +72,22 @@
       var valid = $H(this.options).all(function(opt) {
         return !v[opt.key] || v[opt.key](this.element.getValue(), opt.value);
       }.bind(this));
+      !valid && this.showError();
       this.element.fire("fv:element:validated", {
         element: this.element,
         valid: valid
       });
       return valid;
+    },
+    showError: function() {
+      var err = new Element("span", { "class": "fv_error" }).update("Error");
+      this.element.insert({ after: err });
     }
   });
   Object.extend(wq.Form.Validation.Element, {
-    remove: function() {
-      // TODO: MAke something nice here.
+    remove: function(fve) {
+      var err = fve.element.next();
+      if (err && err.match("span.fv_error")) err.remove();
     }
   });
   

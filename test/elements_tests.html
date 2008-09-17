@@ -24,10 +24,8 @@
 var fv = null;
 new Test.Unit.Runner({
 	setup: function() {
-		fv = new wq.Form.Validation("my-form");
 	},
 	teardown: function() {
-	  wq.Form.Validation.remove("my-form");
 	},
   test_class_should_exist: function() {
     this.assert(wq.Form.Validation.Element);
@@ -48,6 +46,25 @@ new Test.Unit.Runner({
     this.assertEqual(false, fve.validate());
     elm.value = "Hello world";
     this.assertEqual(true, fve.validate());
+    wq.Form.Validation.Element.remove(fve); // teardown
+  },
+  test_add_error_message_container: function() {
+    var elm = $("person_name");
+    elm.value = "";
+    var fve = new wq.Form.Validation.Element(elm, { required: true });
+    this.assertNull(elm.next("span"));
+    fve.validate();
+    this.assertNotNull(elm.next("span.fv_error"));
+    wq.Form.Validation.Element.remove(fve); // teardown
+  },
+  test_remove_error_message_container: function() {
+    var elm = $("person_name");
+    elm.value = "";
+    var fve = new wq.Form.Validation.Element(elm, { required: true });
+    fve.validate();
+    this.assertNotNull(elm.next("span"));
+    wq.Form.Validation.Element.remove(fve);
+    this.assertNull(elm.next("span"));
   }
 });
 
