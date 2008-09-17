@@ -161,6 +161,26 @@ new Test.Unit.Runner({
     
     wq.Form.Validation.Element.prototype.validate = f;
   },
+  test_should_trigger_remove_on_all_elements: function() {
+    var hash = $H();
+    var f = wq.Form.Validation.Element.remove;
+    wq.Form.Validation.Element.remove = function(fve) {
+      hash.set(fve.element.id, true);
+    };
+    
+    with_fv(function(fv) {
+      fv.elements.add("#person_name", { required: true });
+      fv.elements.add("#person_email", { email: true });
+      var f = fv.form;
+      wq.Form.Validation.remove(f);
+      this.assertEqual(true, hash.get("person_name"));
+      this.assertEqual(true, hash.get("person_email"));
+      
+      this.assertEqual(null, hash.get("person_date"));
+    }.bind(this));
+    
+    wq.Form.Validation.Element.remove = f;
+  },
   test_should_attach_validation_by_default: function() {
     with_fv(function(fv) {
       fv.elements.add("#person_email", { required: true });

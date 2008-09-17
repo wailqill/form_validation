@@ -32,6 +32,9 @@ new Test.Unit.Runner({
   test_class_should_exist: function() {
     this.assert(wq.Form.Validation.Element);
   },
+  test_should_have_static_remove_method: function() {
+    this.assertRespondsTo("remove", wq.Form.Validation.Element);
+  },
   test_element_ctor_should_allow_for_string_and_obj_as_elements_and_expose_element: function() {
     var elm = new wq.Form.Validation.Element($("person_name"));
     this.assertEqual(elm.element, $("person_name"));

@@ -42,10 +42,20 @@
     remove: function(element) {
     	var fv = this.forElement(element);
     	if (!fv) return true;
-    	var form = fv.form;
-    	form.stopObserving("submit", fv._submitHandler);
-      delete fv;
+    	
+    	// Trigger remove for all elements
+    	fv.elements.each(function(elm) {
+    	  wq.Form.Validation.Element.remove(elm);
+    	});
+    	
+    	// Remove event handler for submit
+    	fv.form.stopObserving("submit", fv._submitHandler);
+      
+      // Delete references to the form itself
+      var form = fv.form;
+    	delete fv;
       form_validations.unset(form);
+      
       return true;
     }
   });
@@ -67,6 +77,11 @@
         valid: valid
       });
       return valid;
+    }
+  });
+  Object.extend(wq.Form.Validation.Element, {
+    remove: function() {
+      // TODO: MAke something nice here.
     }
   });
   
