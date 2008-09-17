@@ -100,13 +100,24 @@ new Test.Unit.Runner({
     $("my-form").observe("fv:create", function() { counter++; });
     var fv = new wq.Form.Validation("my-form");
     this.assertEqual(1, counter);
+    wq.Form.Validation.remove("my-form");
   },
   test_should_fire_custom_event_element_added: function() {
-    var counter = 0;
-    var fv = new wq.Form.Validation("my-form");
-    $("my-form").observe("fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
-    fv.elements.add("input[name*=email]");
-    this.assertEqual(2, counter);
+    with_fv(function(fv) {
+      var counter = 0;
+      $("my-form").observe("fv:element:added", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
+      fv.elements.add("input[name*=email]");
+      this.assertEqual(2, counter);
+    }.bind(this));
+  },
+  test_should_fire_custom_event_element_validated: function() {
+    with_fv(function(fv) {
+      var counter = 0;
+      fv.elements.add("input[name*=email]");
+      $("my-form").observe("fv:element:validated", function(elm) { if (elm.memo.element.nodeName == "INPUT") counter++; });
+      fv.validate();
+      this.assertEqual(2, counter);
+    }.bind(this));
   },
   test_should_have_validate_method: function() {
     with_fv(function(fv) {

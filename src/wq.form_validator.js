@@ -55,9 +55,14 @@
     },
     validate: function() {
       var v = wq.Form.Validation.Validators;
-      return $H(this.options).all(function(opt) {
+      var valid = $H(this.options).all(function(opt) {
         return !v[opt.key] || v[opt.key](this.element.getValue(), opt.value);
       }.bind(this));
+      this.element.fire("fv:element:validated", {
+        element: this.element,
+        valid: valid
+      });
+      return valid;
     }
   });
   
