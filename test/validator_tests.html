@@ -80,6 +80,48 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "hello world!");
     inputTextAssertTrue(this, elm, "hello");
   },
+  test_validate_numeric: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { numeric: true });
+    
+    inputTextAssertFalse(this, elm, "Hello");
+    inputTextAssertFalse(this, elm, "-");
+    inputTextAssertFalse(this, elm, "+");
+    
+    inputTextAssertTrue(this, elm, null);
+    inputTextAssertTrue(this, elm, "");
+    inputTextAssertTrue(this, elm, "1");
+    inputTextAssertTrue(this, elm, "-1");
+    inputTextAssertTrue(this, elm, "1.555");
+    inputTextAssertTrue(this, elm, "-0.000001");
+  },
+  test_validate_numeric_positive: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { numeric: "positive" });
+    
+    inputTextAssertFalse(this, elm, "Hello");
+    inputTextAssertFalse(this, elm, "-");
+    inputTextAssertFalse(this, elm, "+");
+    inputTextAssertFalse(this, elm, "-123");
+    inputTextAssertFalse(this, elm, "-0.001");
+    
+    inputTextAssertTrue(this, elm, null);
+    inputTextAssertTrue(this, elm, "");
+    inputTextAssertTrue(this, elm, "0.002");
+    inputTextAssertTrue(this, elm, "1658"); // Skåne
+  },
+  test_validate_numeric_negative: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { numeric: "negative" });
+    
+    inputTextAssertFalse(this, elm, "Hello");
+    inputTextAssertFalse(this, elm, "-");
+    inputTextAssertFalse(this, elm, "+");
+    inputTextAssertFalse(this, elm, "123");
+    inputTextAssertFalse(this, elm, "0.001");
+    
+    inputTextAssertTrue(this, elm, null);
+    inputTextAssertTrue(this, elm, "");
+    inputTextAssertTrue(this, elm, "-0.002");
+    inputTextAssertTrue(this, elm, "-273.16"); // Celsius
+  },
   test_combinating_validations: function() {
   	var elm = new wq.Form.Validation.Field("person_field", { regexp: /^hello/, min_length: 10, email: true });
     
@@ -94,6 +136,14 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "abcacba");
     
     var elm = new wq.Form.Validation.Field("person_field", { regexp: /^[abc]$/ });
+    inputTextAssertTrue(this, elm, "");
+  },
+  test_combining_numeric_with_required_demands_input: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { numeric: true, required: true });
+    inputTextAssertFalse(this, elm, "");
+    inputTextAssertTrue(this, elm, "42");
+    
+    var elm = new wq.Form.Validation.Field("person_field", { numeric: true });
     inputTextAssertTrue(this, elm, "");
   }
 });

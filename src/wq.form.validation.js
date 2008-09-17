@@ -95,6 +95,18 @@
     regexp: function(input, option) {
       return !input || option.test(input);
     },
+    numeric: function(input, option) {
+      if (!input) return true;
+      if (option == "positive") return this.numeric_positive(input);
+      if (option == "negative") return this.numeric_negative(input);
+      return input == parseFloat(input).toString();
+    },
+    numeric_positive: function(input) {
+      return input == Math.abs(parseFloat(input)).toString();
+    },
+    numeric_negative: function(input) {
+      return input == -Math.abs(parseFloat(input)).toString();
+    },
     length: function(input, range) {
       return range.include(input.length);
     },
