@@ -18,7 +18,6 @@
       this.form.fire("fv:create");
     },
     validate: function(e) {
-      document.title = Math.random();
       var result = this.elements.invoke("validate").all();
       if (!result && e instanceof Event) e.stop();
       return result;
