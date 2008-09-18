@@ -24,10 +24,8 @@
 var fv = null;
 new Test.Unit.Runner({
 	setup: function() {
-		fv = new wq.Form.Validation("my-form");
 	},
 	teardown: function() {
-	  wq.Form.Validation.remove("my-form");
 	},
   test_class_should_exist: function() {
     this.assert(wq.Form.Validation.Field);
@@ -48,6 +46,40 @@ new Test.Unit.Runner({
     this.assertEqual(false, field.validate());
     elm.value = "Hello world";
     this.assertEqual(true, field.validate());
+    wq.Form.Validation.Field.remove(field); // teardown
+  },
+  test_should_have_errors_collection: function() {
+    $("person_name").value = "";
+    var field = new wq.Form.Validation.Field("person_name", { required: true });
+    this.assertInstanceOf(Hash, field.errors);
+    field.validate();
+    this.assertEqual(1, field.errors.keys().length);
+    this.assertEqual("required", field.errors.keys().first());
+    // And make sure it's cleared between validations
+    field.validate();
+    this.assertEqual(1, field.errors.keys().length);
+    
+    wq.Form.Validation.Field.remove(field); // teardown
+  },
+  test_add_error_message_container_and_only_once: function() {
+    var elm = $("person_name");
+    elm.value = "";
+    var field = new wq.Form.Validation.Field(elm, { required: true });
+    this.assertNull(elm.next("span.fv_error"));
+    field.validate();
+    this.assertNotNull(elm.next("span.fv_error"));
+    field.validate();
+    this.assertNull(elm.next("span.fv_error").next("span.fv_error"));
+    wq.Form.Validation.Field.remove(field); // teardown
+  },
+  test_remove_error_message_container: function() {
+    var elm = $("person_name");
+    elm.value = "";
+    var field = new wq.Form.Validation.Field(elm, { required: true });
+    field.validate();
+    this.assertNotNull(elm.next("span"));
+    wq.Form.Validation.Field.remove(field);
+    this.assertNull(elm.next("span"));
   }
 });
 

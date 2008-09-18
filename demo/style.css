@@ -1,0 +1,35 @@
+body {
+  font-size: 80%;
+  font-family: Helvetica, Arial, sans-serif;
+  background: #114A99;
+  margin: 0;
+  padding: 0;
+}
+form {
+  margin: 10px auto;
+  padding: 10px;
+  background: #fff;
+  width: 500px;
+}
+form p {
+  overflow: hidden;
+}
+label {
+  display: block;
+  float: left;
+  width: 100px;
+  padding-top: .4em;
+}
+input {
+  float: left;
+  display: block;
+  width: 200px;
+}
+span.fv_error {
+  display: block;
+  float: left;
+  padding-top: .4em;
+  padding-left: 5px;
+  font-weight: bold;
+  color: red;
+}
