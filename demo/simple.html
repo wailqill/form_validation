@@ -16,7 +16,7 @@
     var fv = new wq.Form.Validation("demo-form", {
       "#name": { length: { min: 5 } },
       "#email": { required: true, email: true },
-      "#age": { required: true, integer: "positive" }
+      "#age": { required: true, numeric: { min: 18, max: 120 } }
     });
     
   });

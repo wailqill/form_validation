@@ -115,31 +115,32 @@
       return !input || option.test(input);
     },
     regexp: function(input, option) {
-      return !input || option.test(input);
+      return !input || input == "null" || option.test(input);
     },
     numeric: function(input, option) {
-      if (!input) return true;
+      if (!input || input == "null") return true;
+      
+      var parse = parseInt;
+      var compare = function(input) {
+        return parse(input).toString() == input;
+      }
+      
+      if (option === true)
+        return compare(input); // Any valid number
+      
+      option = $H(option);
+      parse = option.get("real") === true ? parseFloat : parseInt;
+      
+      return option.all(function(rule) {
+        if (rule.key == "min" && parse(input) >= rule.value && compare(input)) return true;
+        if (rule.key == "max" && parse(input) <= rule.value && compare(input)) return true;
+        if (rule.key == "real" && compare(input)) return true; // Fallback...
+        return false;
+      });
+      
       if (option == "positive") return this.numeric_positive(input);
       if (option == "negative") return this.numeric_negative(input);
       return input == parseFloat(input).toString();
-    },
-    numeric_positive: function(input) {
-      return input == Math.abs(parseFloat(input)).toString();
-    },
-    numeric_negative: function(input) {
-      return input == -Math.abs(parseFloat(input)).toString();
-    },
-    integer: function(input, option) {
-      if (!input) return true;
-      if (option == "positive") return this.integer_positive(input);
-      if (option == "negative") return this.integer_negative(input);
-      return input == parseInt(input).toString();
-    },
-    integer_positive: function(input) {
-      return input == Math.abs(parseInt(input)).toString();
-    },
-    integer_negative: function(input) {
-      return input == -Math.abs(parseInt(input)).toString();
     },
     length: function(input, option) {
       if (option instanceof ObjectRange)
