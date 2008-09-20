@@ -9,6 +9,19 @@
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
 	<script src="../lib/prototype.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/wq.form.validation.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+	//<![CDATA
+	$(document).observe("dom:loaded", function() {
+	  
+    var fv = new wq.Form.Validation("demo-form", {
+      "#name": { min_length: 5 },
+      "#email": { required: true, email: true },
+      "#age": { required: true, integer: "positive" }
+    });
+    
+  });
+  //]]>
+	</script>
 	<script src="demo.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
