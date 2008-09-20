@@ -6,13 +6,13 @@
   var form_validations = $H();
   
   wq.Form.Validation = Class.create({
-    initialize: function(form) {
+    initialize: function(form, fields) {
       if (!form) throw("No element specified.");
       this.form = $(form);
       form_validations.set(this.form, this);
       
-      this.fields = $A();
-      this.fields.add = addElements.curry(this);
+      setupFields(this, $H(fields));
+      
       this._submitHandler = this.validate.bindAsEventListener(this);
       this.form.observe("submit", this._submitHandler);
       this.form.fire("fv:create");
@@ -30,6 +30,14 @@
       elm.fire("fv:field:added", { element: elm });
     }.bind(this));
   };
+  function setupFields(fv, fields) {
+    fv.fields = $A();
+    fv.fields.add = addElements.curry(fv);
+    fields.each(function(field) {
+      fv.fields.add(field.key, field.value);
+    });
+  };
+  
   
   Object.extend(wq.Form.Validation, {
     forElement: function(element) {

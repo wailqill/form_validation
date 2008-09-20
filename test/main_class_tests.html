@@ -61,6 +61,14 @@ new Test.Unit.Runner({
     this.assertNotNull(fv);
     this.assertIdentical($("my-form"), fv.form);
   },
+  test_should_instantiate_fields_when_specified_in_constructor: function() {
+    var fv = new wq.Form.Validation("my-form", {
+      "#person_name": { required: true },
+      "#person_email": { required: true }
+    });
+    this.assertEqual(2, fv.fields.length);
+    this.assertEqual(true, fv.fields[0].options.required);
+  },
   test_should_remove_instance_with_class_method: function() {
   	new wq.Form.Validation("my-form");
     this.assert(wq.Form.Validation.remove);
