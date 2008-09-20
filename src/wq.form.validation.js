@@ -19,7 +19,7 @@
     },
     validate: function(e) {
       var result = this.fields.invoke("validate").all();
-      if (!result && e instanceof Event) e.stop();
+      if (!result && e && e.stop) e.stop();
       return result;
     }
   });
