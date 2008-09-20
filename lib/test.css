@@ -3,7 +3,7 @@ body, div, p, h1, h2, h3, ul, ol, span, a, table, td, form, img, li {
 }
 
 body {
-  font-size:0.8em;
+  font-size:75%;
 }
 
 .navigation {

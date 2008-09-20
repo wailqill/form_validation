@@ -6,6 +6,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
 	<title>wq.Form.Validation</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
   <script src="../lib/prototype.js" type="text/javascript" charset="utf-8"></script>
 	<style type="text/css" media="screen">
 	body, html {
@@ -14,29 +15,46 @@
 	  background: #ccc;
 	}
   #page {
-    font: 80%/1.4 Helvetica, Arial, sans-serif;
+    font: 75%/1.4 Helvetica, Arial, sans-serif;
     margin: 10px;
+  }
+  #test_frame_container {
+    position: absolute;
+    left: 250px;
+    top: 5em;
+    right: 10px;
+    bottom: 10px;
+    /* IE <= 7 fixes below */
+    *right: auto;
+    *bottom: auto;
+    *width: expression((document.body.clientWidth - 265) + "px");
+    *height: expression((document.body.parentNode.clientHeight - document.all('test_frame_container').offsetTop - 15) + "px");
   }
   #test_frame {
     border: 1px solid #000;
     background: #fff;
     width: 100%;
-    height: 500px;
-    margin-top: 1em;
+    height: 100%;
+  }
+  #content {
+    width: 250px;
   }
   #test-links {
     counter-reset: chapter;
   }
-  html>body #test-links, html>body #test-links ol {
+  #test-links ol {
     margin: 0;
     padding: 0;
+  }
+  #test-links[id] ol {
     list-style: none;
   }
   #test-links li:before {
     counter-increment: chapter;
     content: counter(chapter) ". ";
   }
-  #test-links li {
+  #test-links li li {
+    font-weight: normal;
     padding: 0 0 0 20px;
   }
   #test-links li ol {
@@ -45,9 +63,6 @@
   #test-links li li:before {
     counter-increment: section;
     content: counter(chapter) "." counter(section) ". ";
-  }
-  #test-links li li {
-    font-weight: normal;
   }
 	</style>
 	<script type="text/javascript" charset="utf-8">
@@ -67,15 +82,21 @@
 <body>
   <div id="page">
     <h1>Tests for wq.Form.Validation</h1>
-    <p>Run tests below:</p>
-    <ol id="test-links">
-      <li><a target="test_frame" href="main_class_tests.html">Main Class tests</a></li>
-      <li><a target="test_frame" href="fields_tests.html">Fields tests</a></li>
-      <li><a target="test_frame" href="validator_tests.html">Validator tests</a><ol>
-        <li><a target="test_frame" href="validator_email_tests.html">Validator email tests only</a></li>
-      </ol></li>
-    </ol>
-    <iframe src="#" id="test_frame" name="test_frame"></iframe>
+    <div id="content">
+      <p>Run tests below:</p>
+      <div id="test-links">
+        <ol>
+          <li><a target="test_frame" href="main_class_tests.html">Main Class tests</a></li>
+          <li><a target="test_frame" href="fields_tests.html">Fields tests</a></li>
+          <li><a target="test_frame" href="validator_tests.html">Validator tests</a><ol>
+            <li><a target="test_frame" href="validator_email_tests.html">Validator email tests only</a></li>
+          </ol></li>
+        </ol>
+      </div>
+    </div>
+    <div id="test_frame_container">
+      <iframe src="main_class_tests.html" frameborder="0" id="test_frame" name="test_frame"></iframe>
+    </div>
   </div>
 </body>
 </html>
