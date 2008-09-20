@@ -36,8 +36,8 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "Glenn");
     inputTextAssertTrue(this, elm, "false");
   },
-  test_validate_minimum_length: function() {
-    var elm = new wq.Form.Validation.Field("person_field", { min_length: 5 });
+  test_validate_length_with_minimum: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { length: { min: 5 } });
     
     inputTextAssertFalse(this, elm, null);
     inputTextAssertFalse(this, elm, "");
@@ -46,8 +46,8 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "Hello");
     inputTextAssertTrue(this, elm, $R(1, 10000).toArray().join(""));
   },
-  test_validate_maximum_length: function() {
-    var elm = new wq.Form.Validation.Field("person_field", { max_length: 10 });
+  test_validate_length_with_maximum: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { length: { max: 10 } });
     
     inputTextAssertTrue(this, elm, null);
     inputTextAssertTrue(this, elm, "");
@@ -55,6 +55,17 @@ new Test.Unit.Runner({
     
     inputTextAssertFalse(this, elm, "Hello there");
     inputTextAssertFalse(this, elm, $R(1, 10000).toArray().join(""));
+  },
+  test_validate_length_with_minimum_and_maximum: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { length: { min: 5, max: 10 } });
+    
+    inputTextAssertFalse(this, elm, null);
+    inputTextAssertFalse(this, elm, "");
+    inputTextAssertFalse(this, elm, "Hell");
+    inputTextAssertFalse(this, elm, "Hello kitty");
+    
+    inputTextAssertTrue(this, elm, "Hello");
+    inputTextAssertTrue(this, elm, "Backgammon");
   },
   test_validate_length_with_range: function() {
     var elm = new wq.Form.Validation.Field("person_field", { length: $R(5, 10) });

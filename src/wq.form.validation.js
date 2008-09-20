@@ -141,14 +141,15 @@
     integer_negative: function(input) {
       return input == -Math.abs(parseInt(input)).toString();
     },
-    length: function(input, range) {
-      return range.include(input.length);
-    },
-    min_length: function(input, option) {
-      return input.length >= option;
-    },
-    max_length: function(input, option) {
-      return input.length <= option;
+    length: function(input, option) {
+      if (option instanceof ObjectRange)
+        return option.include(input.length);
+      
+      return $H(option).all(function(rule) {
+        if (rule.key == "min" && input.length >= rule.value) return true;
+        if (rule.key == "max" && input.length <= rule.value) return true;
+        return false;
+      });
     },
     EmailFormats: {
       // RegExp to follow the exact RFC defenition
