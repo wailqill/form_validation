@@ -122,6 +122,42 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "-0.002");
     inputTextAssertTrue(this, elm, "-273.16"); // Celsius
   },
+  test_validate_integer: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { integer: true });
+    
+    inputTextAssertFalse(this, elm, "Hello");
+    inputTextAssertFalse(this, elm, "-");
+    inputTextAssertFalse(this, elm, "+");
+    inputTextAssertFalse(this, elm, "1.555");
+    inputTextAssertFalse(this, elm, "-0.000001");
+    
+    inputTextAssertTrue(this, elm, "1");
+    inputTextAssertTrue(this, elm, "-1");
+  },
+  test_validate_integer_positive: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { integer: "positive" });
+    
+    inputTextAssertFalse(this, elm, "Hello");
+    inputTextAssertFalse(this, elm, "-");
+    inputTextAssertFalse(this, elm, "+");
+    inputTextAssertFalse(this, elm, "-123");
+    inputTextAssertFalse(this, elm, "-0.001");
+    
+    inputTextAssertTrue(this, elm, "12");
+    inputTextAssertTrue(this, elm, "1523"); // Gustav Vasa
+  },
+  test_validate_integer_negative: function() {
+    var elm = new wq.Form.Validation.Field("person_field", { integer: "negative" });
+    
+    inputTextAssertFalse(this, elm, "Hello");
+    inputTextAssertFalse(this, elm, "-");
+    inputTextAssertFalse(this, elm, "+");
+    inputTextAssertFalse(this, elm, "123");
+    inputTextAssertFalse(this, elm, "-0.1");
+    
+    inputTextAssertTrue(this, elm, "-2");
+    inputTextAssertTrue(this, elm, "-40"); // Celsius/Fahrenheit
+  },
   test_combinating_validations: function() {
   	var elm = new wq.Form.Validation.Field("person_field", { regexp: /^hello/, min_length: 10, email: true });
     

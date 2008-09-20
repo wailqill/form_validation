@@ -129,6 +129,18 @@
     numeric_negative: function(input) {
       return input == -Math.abs(parseFloat(input)).toString();
     },
+    integer: function(input, option) {
+      if (!input) return true;
+      if (option == "positive") return this.integer_positive(input);
+      if (option == "negative") return this.integer_negative(input);
+      return input == parseInt(input).toString();
+    },
+    integer_positive: function(input) {
+      return input == Math.abs(parseInt(input)).toString();
+    },
+    integer_negative: function(input) {
+      return input == -Math.abs(parseInt(input)).toString();
+    },
     length: function(input, range) {
       return range.include(input.length);
     },
