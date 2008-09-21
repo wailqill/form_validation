@@ -81,7 +81,7 @@
       var v = wq.Form.Validation.Validators;
       this.errors = $H();
       var valid = $H(this.options).all(function(opt) {
-        var ok = !v[opt.key] || v[opt.key](this.element.getValue(), opt.value);
+        var ok = !v[opt.key] || v[opt.key](this.element.getValue(), opt.value, this);
         !ok && this.errors.set(opt.key, "Error");
         return ok;
       }.bind(this));
@@ -151,6 +151,9 @@
         if (rule.key == "max" && input.length <= rule.value) return true;
         return false;
       });
+    },
+    custom: function(input, func, field) {
+      return func(input, field);
     },
     EmailFormats: {
       // RegExp to follow the exact RFC defenition

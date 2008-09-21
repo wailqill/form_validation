@@ -162,6 +162,22 @@ new Test.Unit.Runner({
     inputTextAssertTrue(this, elm, "4");
     inputTextAssertTrue(this, elm, "-273.16"); // Celsius
   },
+  test_custom_validator_function: function() {
+    var custom_input, custom_field;
+    $("person_field").value = "b0b";
+    
+    var original_field = new wq.Form.Validation.Field("person_field", {
+      custom: function(input, field) {
+        custom_input = input;
+        custom_field = field;
+        return /b0b/.test(input);
+      }
+    });
+    this.assertEqual(true, original_field.validate());
+    
+    this.assertEqual("b0b", custom_input);
+    this.assertEqual(original_field.element.id, custom_field.element.id);
+  },
   test_combinating_validations: function() {
   	var elm = new wq.Form.Validation.Field("person_field", { regexp: /^hello/, length: { min: 10 }, email: true });
     
