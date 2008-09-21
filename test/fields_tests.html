@@ -80,6 +80,20 @@ new Test.Unit.Runner({
     this.assertNotNull(elm.next("span"));
     wq.Form.Validation.Field.remove(field);
     this.assertNull(elm.next("span"));
+  },
+  test_custom_error_message_in_rules: function() {
+    $("person_name").value = "Napoleon";
+    var field = new wq.Form.Validation.Field("person_name", {
+      message: "I am Pixel's vivid hunger!",
+      length: {
+        min: 10
+      }
+    });
+    field.validate();
+    
+    var err = field.element.next("span");
+    this.assertNotNull(err);
+    this.assertEqual("I am Pixel's vivid hunger!", err.firstChild.nodeValue);
   }
 });
 

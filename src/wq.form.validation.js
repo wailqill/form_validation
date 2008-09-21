@@ -72,17 +72,21 @@
     initialize: function(elm, options) {
       var elm = $(elm);
       this.element = elm;
-      this.errors = $H();
-      this.errorElement = new Element("span", { "class": "fv_error" });
+      
       this.options = arguments[1] || {};
       if (this.options.email === true) this.options.email = wq.Form.Validation.Validators.EmailFormats.RealisticRFC2822;
+      
+      this.errors = $H();
+      this.errorElement = new Element("span", { "class": "fv_error" });
+      this.errorMessage = this.options.message || "Invalid";
+      delete this.options.message;
     },
     validate: function() {
       var v = wq.Form.Validation.Validators;
       this.errors = $H();
       var valid = $H(this.options).all(function(opt) {
         var ok = !v[opt.key] || v[opt.key](this.element.getValue(), opt.value, this);
-        !ok && this.errors.set(opt.key, "Error");
+        !ok && this.errors.set(opt.key, true);
         return ok;
       }.bind(this));
       valid ? this.hideError() : this.showError();
@@ -93,7 +97,7 @@
       return valid;
     },
     showError: function() {
-      this.errorElement.update("Error");
+      this.errorElement.update(this.errorMessage);
       this.element.insert({ after: this.errorElement });
     },
     hideError: function() {
