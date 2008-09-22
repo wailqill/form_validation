@@ -97,11 +97,17 @@
       return valid;
     },
     showError: function() {
-      this.errorElement.update(this.errorMessage);
+      this.errorElement.update(this.getErrorMessage());
       this.element.insert({ after: this.errorElement });
     },
     hideError: function() {
       this.errorElement.parentNode && this.errorElement.remove(); // Check to see if in DOM
+    },
+    getErrorMessage: function() {
+      var msg = this.errorMessage;
+      var err_elm = $(this.element.id + "_error_message");
+      if (err_elm) msg = err_elm.value;
+      return msg;
     }
   });
   Object.extend(wq.Form.Validation.Field, {

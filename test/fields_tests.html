@@ -94,6 +94,21 @@ new Test.Unit.Runner({
     var err = field.element.next("span");
     this.assertNotNull(err);
     this.assertEqual("I am Pixel's vivid hunger!", err.firstChild.nodeValue);
+  },
+  test_custom_error_message_from_dom_node: function() {
+    var field = new wq.Form.Validation.Field("person_email", { email: true });
+    field.element.insert({ after: new Element("input", {
+        type: "hidden",
+        id: "person_email_error_message",
+        value: "I am Dalai Lama's bad conscience."
+      })
+    });
+    field.element.value = "bad@email";
+    field.validate();
+    
+    var err = field.element.next("span");
+    this.assertNotNull(err);
+    this.assertEqual("I am Dalai Lama's bad conscience.", err.firstChild.nodeValue);
   }
 });
 
